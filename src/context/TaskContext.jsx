@@ -46,3 +46,47 @@ export const TaskProvider = ({ children }) =>
       localStorage.setItem('tasks', JSON.stringify(tasks));
     }
   }, [tasks]);
+
+ 
+  // Add a new task
+  const addTask = (title) => {
+    const newTask = {
+      id: Date.now(),
+      title,
+      completed: false,
+    };
+    setTasks([newTask, ...tasks]);
+  };
+
+  // Edit an existing task
+  const editTask = (taskId, newTitle) => {
+    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, title: newTitle } : task)));
+  };
+
+  // Toggle complete/incomplete
+  const updateTaskStatus = (taskId) => {
+    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, completed: !task.completed } : task)));
+  };
+
+  // Delete a task
+  const deleteTask = (taskId) => {
+    setTasks(tasks.filter((task) => task.id !== taskId));
+  };
+
+  // Provide context values
+  return (
+    <TaskContext.Provider
+      value={{
+        tasks,
+        loading,
+        error,
+        addTask,
+        editTask,
+        updateTaskStatus,
+        deleteTask,
+      }}
+    >
+      {children}
+    </TaskContext.Provider>
+  );
+};
